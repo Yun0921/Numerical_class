@@ -3,8 +3,8 @@
 #include<vector>
 using namespace std;
 
-double x[] = {-0.03, -0.04, -0.05, -0.06};
-double y[] = {0.740818, 0.670320, 0.666531, 0.548812};
+double x[] = {0.3, 0.4, 0.5, 0.6};
+double y[] = {-0.440818, -0.27032, -0.106531, 0.051188};
 int n = 4;
 
 double Lagrange(double x0) {
@@ -44,11 +44,12 @@ int main() {
     double tolerance = 1e-6;
     int max_iterations = 1000;
     vector<double> roots;
-
-    cout << "\nSecant Method (Initial guesses " << x0_secant << ", " << x1_secant << "):" << endl;
+    
+    cout << "Inverse Interpolation using Secant" << endl;
+    cout << "Secant Method (Initial guesses " << x0_secant << ", " << x1_secant << "):" << endl;
     pair<double, int> result_secant = secant(x0_secant, x1_secant, tolerance, max_iterations);
     if (!isnan(result_secant.first)) {
-      cout << "Converged to root: " << result_secant.first << " in " << result_secant.second << " iterations" << endl;
+       cout << "Converged to root: " << result_secant.first << " in " << result_secant.second << " iterations" << endl;
         roots.push_back(result_secant.first);
 
     } else {
