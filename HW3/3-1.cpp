@@ -24,7 +24,7 @@ int main() {
     for(int d = 1; d <= 4; d++) {
         double y0 = Lagrange(x, y, d, x0);
         printf("Degree: %d, cos(0.75) = %lf\n", d, y0);
-        printf("Absolute Error: %lf\n", Y-y0);
+        printf("Absolute Error: %lf\n", y0 - Y);
         printf("\n");
     }
 
