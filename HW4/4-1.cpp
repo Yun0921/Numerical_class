@@ -20,12 +20,15 @@ double composite_trapezoidal_rule(double a, double b, double h){
 
 double composite_simpson_rule(double a, double b, double h){
     double integral = 0;
-    int cnt = 0;
-    for(double x = a; x < b; x += h){
-        integral += (f(x) + 4*f(x+h/2) + f(x+h));
-        
+    integral += f(a);
+    integral += f(b);
+    for(double x = a+h; x < b; x += 2*h){
+        integral += 4*f(x);
     }
-    integral = integral * h / 6;
+    for(double x = a+2*h; x < b-h; x += 2*h){
+        integral += 2*f(x);
+    }
+    integral = integral * h / 3;
     return integral;
 }
 
@@ -39,7 +42,7 @@ double composite_midpoint_rule(double a, double b, double h){
 }
 
 int main(){
-    int a = 0, b = 2;
+    int a = 1, b = 2;
     double h = 0.1;
     double intergral = 0;
     //cout << "check" << endl;
