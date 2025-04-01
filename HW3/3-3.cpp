@@ -56,13 +56,48 @@ int main() {
     double df = (Hermite(10+d) - Hermite(10-d)) / (2*d);
     cout << "The velocity at t = 10: " << df << " feet/sec" << endl;
 
-    cout << "Polynomial coefficients: ";
-    for(int i = 0; i < 10; i++){
-        cout << table[i][i] << ","<< " ";
+    //--------------------------------------------------------------
+    double speed_limit = 80.67; // 55 mi/h in ft/s
+    double h = 0.00001;
+    double t_exceed = -1;
+
+    for(double t = 0; t <= 13; t += h){
+        double v = (Hermite(t + h) - Hermite(t - h)) / (2 * h);
+        if(v > speed_limit){
+            t_exceed = t;
+            cout << "Speed exceeds 55 mi/h at t = " << t << " seconds" << endl;
+            cout << "Speed at that moment: " << v << " ft/s" << endl;
+            break;
+        }
+    }
+    if(t_exceed == -1){
+        cout << "Speed never exceeds 55 mi/h." << endl;
     }
 
+    //--------------------------------------------------------------
+    double max_speed = -1;
+    double max_t = 0;
+
+    // Scan over time to find the maximum speed
+    for(double t = 0; t <= 13; t += h){
+        double v = (Hermite(t + h) - Hermite(t - h)) / (2 * h);  // Estimate velocity
+        if(v > max_speed){
+            max_speed = v;
+            max_t = t;
+        }
+    }
+
+    cout << "The predicted maximum speed is: " << max_speed << " ft/s at t = " << max_t << " seconds" << endl;
+
+
+
+    // cout << "Polynomial coefficients: ";
+    // for(int i = 0; i < 10; i++){
+    //     cout << table[i][i] << ","<< " ";
+    // }
+
     
-    //prnit the table
+    // //prnit the table
     // for(int i = 0; i < 10; i++){
     //     for(int j = 0; j < 10; j++){
     //         cout << table[i][j] << " ";
