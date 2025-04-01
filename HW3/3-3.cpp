@@ -52,7 +52,7 @@ int main() {
     Hermite(10);
     cout << "The position at t = 10: " << Hermite(10) << " feet" << endl;
 
-    double d = 0.0001;
+    double d = 0.00001;
     double df = (Hermite(10+d) - Hermite(10-d)) / (2*d);
     cout << "The velocity at t = 10: " << df << " feet/sec" << endl;
 
@@ -61,7 +61,7 @@ int main() {
     double h = 0.00001;
     double t_exceed = -1;
 
-    for(double t = 0; t <= 13; t += h){
+    for(double t = 0; t <= 13; t += 0.001){
         double v = (Hermite(t + h) - Hermite(t - h)) / (2 * h);
         if(v > speed_limit){
             t_exceed = t;
@@ -79,7 +79,7 @@ int main() {
     double max_t = 0;
 
     // Scan over time to find the maximum speed
-    for(double t = 0; t <= 13; t += h){
+    for(double t = 0; t <= 13; t += 0.001){
         double v = (Hermite(t + h) - Hermite(t - h)) / (2 * h);  // Estimate velocity
         if(v > max_speed){
             max_speed = v;
