@@ -34,6 +34,7 @@ pair<double, int> secant(double x0, double x1, double tolerance, int max_iterati
         }
         x_prev = x_curr;
         x_curr = x_next;
+        //printf("Iteration %d: x = %.10f, Lagrange(x) = %.10f\n", i + 1, x_curr, Lagrange(x_curr));
     }
     return make_pair(NAN, max_iterations); // Did not converge
 }
@@ -55,6 +56,7 @@ int main() {
     } else {
       cout << "Did not converge within " << max_iterations << " iterations." << endl;
     }
+    //printf("%lf\n", Lagrange(0.6));
 
     
     return 0;
