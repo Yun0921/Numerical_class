@@ -48,7 +48,6 @@ int main() {
     integral = composite_simpson_rule(a, b, h1, 'f');
     cout << "The integral of f(x) = sin(x)*x^(-0.25) using Simpson's rule: " << integral << endl;
     //--------------------------------- 
-
     double c = 0, d = 1;
     double h2 = (d-c)/4;
     double integral2 = 0;
