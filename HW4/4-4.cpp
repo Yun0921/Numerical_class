@@ -17,26 +17,28 @@ double g(double t) {
 double composite_simpson_rule(double a, double b, double h, char func_type = 'f') {
     double integral = 0;
     if(func_type == 'f') {
-        integral += f(a+1e-6);
-        integral += f(b);
-        for(double x = a+h; x < b; x += 2*h){
-            integral += 4*f(x);
-        }
-        for(double x = a+2*h; x < b-h; x += 2*h){
-            integral += 2*f(x);
-        }
+        // integral += f(a+1e-6);
+        // integral += f(b);
+        // for(double x = a+h; x < b; x += 2*h){
+        //     integral += 4*f(x);
+        // }
+        // for(double x = a+2*h; x < b-h; x += 2*h){
+        //     integral += 2*f(x);
+        // }
+        integral = 7*f(a+1e-6) + 32*f(a+h) + 12*f(a+2*h) + 32*f(a+3*h) + 7*f(b);
     } else {
-        integral += g(a+1e-6);
-        integral += g(b);
-        for(double x = a+h; x < b; x += 2*h){
-            integral += 4*g(x);
-        }
-        for(double x = a+2*h; x < b-h; x += 2*h){
-            integral += 2*g(x);
-        }
+        // integral += g(a+1e-6);
+        // integral += g(b);
+        // for(double x = a+h; x < b; x += 2*h){
+        //     integral += 4*g(x);
+        // }
+        // for(double x = a+2*h; x < b-h; x += 2*h){
+        //     integral += 2*g(x);
+        // }
+        integral = 7*g(a+1e-6) + 32*g(a+h) + 12*g(a+2*h) + 32*g(a+3*h) + 7*g(b);
     }
     
-    integral = integral * h / 3;
+    integral = integral * (2*h / 45);
     return integral;
 }
 
