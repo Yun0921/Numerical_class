@@ -33,6 +33,6 @@ int main() {
     cout << "(c) SOR Method Solution:\n";
     for (int i = 0; i < n; i++)
         cout << "x" << i+1 << " = " << x[i] << endl;
-    cout << "iterations: " << iter << endl;
+    //cout << "iterations: " << iter << endl;
     return 0;
 }
