@@ -12,7 +12,6 @@ const int N = 10;
 const double Y_0 = 1.0; // y(0) = 1
 const double Y_1 = 2.0; // y(1) = 2
 
-// 正確的係數函數
 inline double p(double x) { return -(x + 1); }
 inline double q(double x) { return 2.0; }
 inline double r(double x) { return (1 - x * x) * exp(-x); }
@@ -108,11 +107,12 @@ vector<double> finiteDifferenceMethod() {
 }
 
 // === Variation Method ===
-double y1_interp(double x) { return (1 - x) * 1.0 + x * 2.0; }
-double phi(int i, double x) { return sin(i * PI * x); }
-double dphi(int i, double x) { return i * PI * cos(i * PI * x); }
+double y1_interp(double x) { return (1 - x) * Y_0 + x * Y_1; } // 線形插值 y(0)=1, y(1)=2
+double phi(int i, double x) { return sin(i * PI * x); } // 基底
+double dphi(int i, double x) { return i * PI * cos(i * PI * x); } // 基底一階導數
 
 double integrate(function<double(double)> func, double a = 0, double b = 1) {
+    // Gaussian quadrature (5-point)
     vector<double> x = {-0.9061798459, -0.5384693101, 0, 0.5384693101, 0.9061798459};
     vector<double> w = {0.2369268850, 0.4786286705, 0.5688888889, 0.4786286705, 0.2369268850};
     double sum = 0;
@@ -130,13 +130,18 @@ vector<double> variationApproach() {
     for (int i = 0; i < M; ++i) {
         for (int j = 0; j < M; ++j) {
             A[i][j] = integrate([=](double x) {
-                return dphi(i + 1, x) * dphi(j + 1, x) + q(x) * phi(i + 1, x) * phi(j + 1, x);
+                return p(x) * dphi(i + 1, x) * dphi(j + 1, x) + q(x) * phi(i + 1, x) * phi(j + 1, x);
             });
         }
+        
+        double y1p = (Y_1 - Y_0) / (1-0); // y1'(x) = (y(1) - y(0)) / (1 - 0) = 1
+        double dp = -1; // (-(1+x))'
         b[i] = integrate([=](double x) {
-            return (r(x) - q(x) * y1_interp(x)) * phi(i + 1, x);
+            return (r(x) + dp*y1p - q(x) * y1_interp(x)) * phi(i + 1, x);
         });
     }
+
+    // Gaussian elimination
     for (int i = 0; i < M; ++i) {
         for (int k = i + 1; k < M; ++k) {
             double t = A[k][i] / A[i][i];
@@ -150,6 +155,7 @@ vector<double> variationApproach() {
             c[i] -= A[i][j] * c[j];
         c[i] /= A[i][i];
     }
+
     vector<double> y(N + 1);
     for (int i = 0; i <= N; ++i) {
         double x = i * h, y2 = 0;
