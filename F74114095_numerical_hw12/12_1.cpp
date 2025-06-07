@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <iomanip>
 using namespace std;
 
 const double PI = acos(-1);
@@ -126,19 +127,21 @@ int main() {
         }
     }
 
-    // 輸出數值解
-    printf("  y\\x  ");
+    cout << setw(6) << "y/x";
     for (int i = 0; i <= nx; ++i) {
-        printf("%-8d ", i);
+        double r = 0 + i * h;
+        cout << setw(12) << r;
     }
-    cout << "\n";
-    
+    cout << endl;
+
+    cout << fixed << setprecision(4);
     for (int j = ny; j >= 0; --j) {
-        printf("%5d ", j);
+        double theta = j * k;
+        cout << setw(6) << theta;
         for (int i = 0; i <= nx; ++i) {
-            printf("%8.4f ", u[i][j]);
+            cout << setw(12) << u[i][j];
         }
-        cout << "\n";
+        cout << endl;
     }
 
     return 0;
