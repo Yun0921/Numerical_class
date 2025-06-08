@@ -94,7 +94,7 @@ int main() {
     cout << setw(6) << "t";
     for (int i = 0; i < N; ++i) {
         double r = 0.5 + i * dr;
-        cout << setw(9) << "r=" << fixed << setprecision(2) << r;
+        cout << setw(8) << "r=" << fixed << setprecision(2) << r;
     }
     cout << endl;
 
@@ -103,8 +103,9 @@ int main() {
     for (int j = 0; j < time_steps; ++j) {
         double t = j * dt;
         cout << setw(6) << t;
-        for (int i = 0; i < N; ++i)
-            cout << setw(9) << T[j][i];
+        for (int i = 0; i < N; ++i) {
+            cout << setw(12) << T[j][i];
+        }
         cout << endl;
     }
 
