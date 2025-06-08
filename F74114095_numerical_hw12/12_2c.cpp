@@ -26,6 +26,16 @@ double right_bc(double t) {
     return 100 + 40 * t;
 }
 
+// g_i = 4K * (1/r_i) * (T_{i+1} - T_{i-1}) / (2*dr)
+vector<double> compute_g(const vector<double>& T) {
+    vector<double> g(N, 0.0);
+    for (int i = 1; i < N - 1; ++i) {
+        double r = 0.5 + i * dr;
+        g[i] = alpha2 * (1.0 / r) * (T[i + 1] - T[i - 1]) / (2 * dr);
+    }
+    return g;
+}
+
 // 建立 A_L（左矩陣）
 void build_AL(vector<double>& a, vector<double>& b, vector<double>& c) {
     for (int i = 0; i < N - 2; ++i) {
@@ -35,13 +45,13 @@ void build_AL(vector<double>& a, vector<double>& b, vector<double>& c) {
     }
 }
 
-// 建立 A_R（右矩陣）
-vector<double> apply_AR(const vector<double>& T_prev, double t_now) {
+// 建立 A_R（右向量）+ kg_i
+vector<double> apply_AR(const vector<double>& T_prev, const vector<double>& g, double t_now) {
     vector<double> b(N - 2, 0.0);
     for (int i = 1; i < N - 1; ++i) {
         double left = (i == 1) ? T_prev[1] + 6 * dr * T_prev[0] : T_prev[i - 1];
         double right = (i == N - 2) ? right_bc(t_now) : T_prev[i + 1];
-        b[i - 1] = (1 - lambda) * T_prev[i] + 0.5 * lambda * (left + right);
+        b[i - 1] = (1 - lambda) * T_prev[i] + 0.5 * lambda * (left + right) + dt * g[i]; // 加上 kg_i
     }
     return b;
 }
@@ -74,19 +84,16 @@ int main() {
 
     for (int j = 1; j < time_steps; ++j) {
         double t_now = j * dt;
-
         const vector<double>& T_prev = T[j - 1];
         vector<double>& T_now = T[j];
 
-        vector<double> rhs = apply_AR(T_prev, t_now);
+        vector<double> g = compute_g(T_prev);
+        vector<double> rhs = apply_AR(T_prev, g, t_now);
 
-        // 右邊邊界修正
+        // 邊界修正
+        rhs[0] += 0.5 * lambda * (T_prev[1] + 6 * dr * T_prev[0]);
         rhs[N - 3] += 0.5 * lambda * right_bc(t_now);
 
-        // 左邊邊界修正
-        rhs[0] += 0.5 * lambda * (T_prev[1] + 6 * dr * T_prev[0]);
-
-        // 解三對角系統
         vector<double> T_inner = solve_tridiagonal(a, b_diag, c, rhs);
 
         // 填入解

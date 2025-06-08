@@ -77,7 +77,7 @@ int main() {
         // 建立 RHS
         vector<double> d(N - 2);
         for (int i = 1; i < N - 1; ++i) {
-            d[i - 1] = T_prev[i] + dt * g[i];
+            d[i - 1] = T_prev[i] - dt * g[i];
         }
 
         // Neumann 邊界修正（左邊）
