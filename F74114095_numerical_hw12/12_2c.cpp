@@ -8,7 +8,7 @@ const double dr = 0.1;
 const double dt = 0.5;
 const double K = 0.1;
 const double alpha2 = 4 * K;
-const double lambda = alpha2 * dt / (2 * dr * dr);
+const double lambda = alpha2 * dt / (dr * dr);
 const int time_steps = 21;
 
 // 初始條件 T(r,0) = 200(r - 0.5)
@@ -36,11 +36,11 @@ void build_AL(vector<double>& a, vector<double>& b, vector<double>& c) {
 }
 
 // 建立 A_R（右矩陣）
-vector<double> apply_AR(const vector<double>& T_prev) {
+vector<double> apply_AR(const vector<double>& T_prev, double t_now) {
     vector<double> b(N - 2, 0.0);
     for (int i = 1; i < N - 1; ++i) {
         double left = (i == 1) ? T_prev[1] + 6 * dr * T_prev[0] : T_prev[i - 1];
-        double right = (i == N - 2) ? right_bc((dt * (time_steps - 1))) : T_prev[i + 1];
+        double right = (i == N - 2) ? right_bc(t_now) : T_prev[i + 1];
         b[i - 1] = (1 - lambda) * T_prev[i] + 0.5 * lambda * (left + right);
     }
     return b;
@@ -78,22 +78,22 @@ int main() {
         const vector<double>& T_prev = T[j - 1];
         vector<double>& T_now = T[j];
 
-        vector<double> rhs = apply_AR(T_prev);
+        vector<double> rhs = apply_AR(T_prev, t_now);
 
-        // 右邊邊界修正 (因為 T_5 = Dirichlet)
+        // 右邊邊界修正
         rhs[N - 3] += 0.5 * lambda * right_bc(t_now);
 
-        // 左邊邊界修正 (Neumann)
+        // 左邊邊界修正
         rhs[0] += 0.5 * lambda * (T_prev[1] + 6 * dr * T_prev[0]);
 
         // 解三對角系統
         vector<double> T_inner = solve_tridiagonal(a, b_diag, c, rhs);
 
         // 填入解
-        T_now[0] = T_prev[1] + 6 * dr * T_prev[0];
+        T_now[0] = T_prev[1] + 6 * dr * T_prev[0]; // Neumann
         for (int i = 1; i < N - 1; ++i)
             T_now[i] = T_inner[i - 1];
-        T_now[N - 1] = right_bc(t_now);
+        T_now[N - 1] = right_bc(t_now); // Dirichlet
     }
 
     // 輸出 r 標頭

@@ -8,7 +8,7 @@ const double dr = 0.1;
 const double dt = 0.5;
 const double K = 0.1;
 const double alpha2 = 4 * K;
-const double lambda = alpha2 * dt / (2 * dr * dr); // = 10
+const double lambda = alpha2 * dt / (dr * dr);
 const int time_steps = 21; // 從 t = 0 到 t = 10，共 21 個時間點
 
 // 初始條件 f(r) = 200(r - 0.5)
